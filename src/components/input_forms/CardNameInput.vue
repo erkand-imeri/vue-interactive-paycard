@@ -6,7 +6,7 @@
           :id="cardType"
           @input="changeName"
           class="card-input__input"
-          :value="cardName"
+          :value="value"
           data-card-field
           autocomplete="off"
         />
@@ -20,7 +20,7 @@ export default {
       type: String,
       required: true
     },
-    cardName: {
+    value: {
       type: String,
       required: true
     }

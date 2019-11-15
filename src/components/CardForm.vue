@@ -10,32 +10,14 @@
       ></card-display>
     </div>
     <div class="card-form__inner">
-      <div class="card-input">
-        <label for="cardNumber" class="card-input__label">Card Number</label>
-        <input
-          type="tel"
-          :id="fields.cardNumber"
-          @input="changeNumber"
-          @focus="focusCardNumber"
-          @blur="blurCardNumber"
-          class="card-input__input"
-          :value="formData.cardNumber"
-          :maxlength="cardNumberMaxLength"
-          data-card-field
-          autocomplete="off"
-        />
-        <button
-          class="card-input__eye"
-          :class="{ '-active' : !isCardNumberMasked }"
-          title="Show/Hide card number"
-          tabindex="-1"
-          :disabled="formData.cardNumber === ''"
-          @click="toggleMask"
-        ></button>
-      </div>
+      <card-number-input
+        data-card-field
+        :card-type="fields.cardNumber"
+        v-model="formData.cardNumber"
+      >
+      </card-number-input>
       <card-name-input v-letter-only
         :card-type="fields.cardName"
-        :card-name="formData.cardName"
         v-model="formData.cardName"
       ></card-name-input>
       <div class="card-form__row">
@@ -99,12 +81,14 @@
 <script>
 import Card from '@/components/Card'
 import CardNameInput from './input_forms/CardNameInput'
+import CardNumberInput from './input_forms/CardNumberInput'
 
 export default {
   name: 'CardForm',
   components: {
     'card-display': Card,
-    'card-name-input': CardNameInput
+    'card-name-input': CardNameInput,
+    'card-number-input': CardNumberInput
   },
   directives: {
     'number-only': {
@@ -185,11 +169,6 @@ export default {
     generateMonthValue (n) {
       return n < 10 ? `0${n}` : n
     },
-    changeName (value) {
-      // this.formData.cardName = e.target.value
-      console.log('cardform', value)
-      // this.$emit('input-card-name', this.formData.cardName)
-    },
     changeNumber (e) {
       this.formData.cardNumber = e.target.value
       let value = this.formData.cardNumber.replace(/\D/g, '')
@@ -257,14 +236,6 @@ export default {
     },
     focusCardNumber () {
       this.unMaskCardNumber()
-    },
-    toggleMask () {
-      this.isCardNumberMasked = !this.isCardNumberMasked
-      if (this.isCardNumberMasked) {
-        this.maskCardNumber()
-      } else {
-        this.unMaskCardNumber()
-      }
     }
   }
 }

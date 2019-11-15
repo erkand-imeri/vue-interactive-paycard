@@ -11,7 +11,7 @@
     </div>
     <div class="card-form__inner">
       <card-number-input
-        data-card-field
+        v-number-only
         :card-type="fields.cardNumber"
         v-model="formData.cardNumber"
       >
@@ -162,28 +162,9 @@ export default {
       }
     }
   },
-  mounted () {
-    this.maskCardNumber()
-  },
   methods: {
     generateMonthValue (n) {
       return n < 10 ? `0${n}` : n
-    },
-    changeNumber (e) {
-      this.formData.cardNumber = e.target.value
-      let value = this.formData.cardNumber.replace(/\D/g, '')
-      // american express, 15 digits
-      if ((/^3[47]\d{0,13}$/).test(value)) {
-        this.formData.cardNumber = value.replace(/(\d{4})/, '$1 ').replace(/(\d{4}) (\d{6})/, '$1 $2 ')
-        this.cardNumberMaxLength = 17
-      } else if ((/^3(?:0[0-5]|[68]\d)\d{0,11}$/).test(value)) { // diner's club, 14 digits
-        this.formData.cardNumber = value.replace(/(\d{4})/, '$1 ').replace(/(\d{4}) (\d{6})/, '$1 $2 ')
-        this.cardNumberMaxLength = 16
-      } else if ((/^\d{0,16}$/).test(value)) { // regular cc number, 16 digits
-        this.formData.cardNumber = value.replace(/(\d{4})/, '$1 ').replace(/(\d{4}) (\d{4})/, '$1 $2 ').replace(/(\d{4}) (\d{4}) (\d{4})/, '$1 $2 $3 ')
-        this.cardNumberMaxLength = 19
-      }
-      this.$emit('input-card-number', this.formData.cardNumber)
     },
     changeMonth () {
       this.$emit('input-card-month', this.formData.cardMonth)
@@ -215,27 +196,6 @@ export default {
       if (sum % 10 !== 0) {
         alert('invaild card number')
       }
-    },
-    blurCardNumber () {
-      if (this.isCardNumberMasked) {
-        this.maskCardNumber()
-      }
-    },
-    maskCardNumber () {
-      this.mainCardNumber = this.formData.cardNumber
-      let arr = this.formData.cardNumber.split('')
-      arr.forEach((element, index) => {
-        if (index > 4 && index < 14 && element.trim() !== '') {
-          arr[index] = '*'
-        }
-      })
-      this.formData.cardNumber = arr.join('')
-    },
-    unMaskCardNumber () {
-      this.formData.cardNumber = this.mainCardNumber
-    },
-    focusCardNumber () {
-      this.unMaskCardNumber()
     }
   }
 }

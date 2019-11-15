@@ -36,6 +36,9 @@ export default {
       required: true
     }
   },
+  mounted () {
+    this.maskCardNumber()
+  },
   data () {
     return {
       isCardNumberMasked: true,

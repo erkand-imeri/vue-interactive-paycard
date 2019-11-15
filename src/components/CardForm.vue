@@ -1,13 +1,13 @@
 <template>
   <div class="card-form">
     <div class="card-list">
-      <Card
+      <card-display
         :fields="fields"
         :labels="formData"
         :isCardNumberMasked="isCardNumberMasked"
         :randomBackgrounds="randomBackgrounds"
         :backgroundImage="backgroundImage"
-      />
+      ></card-display>
     </div>
     <div class="card-form__inner">
       <div class="card-input">
@@ -33,19 +33,11 @@
           @click="toggleMask"
         ></button>
       </div>
-      <div class="card-input">
-        <label for="cardName" class="card-input__label">Card Name</label>
-        <input
-          type="text"
-          :id="fields.cardName"
-          v-letter-only
-          @input="changeName"
-          class="card-input__input"
-          :value="formData.cardName"
-          data-card-field
-          autocomplete="off"
-        />
-      </div>
+      <card-name-input v-letter-only
+        :card-type="fields.cardName"
+        :card-name="formData.cardName"
+        v-model="formData.cardName"
+      ></card-name-input>
       <div class="card-form__row">
         <div class="card-form__col">
           <div class="card-form__group">
@@ -106,8 +98,14 @@
 
 <script>
 import Card from '@/components/Card'
+import CardNameInput from './input_forms/CardNameInput'
+
 export default {
   name: 'CardForm',
+  components: {
+    'card-display': Card,
+    'card-name-input': CardNameInput
+  },
   directives: {
     'number-only': {
       bind (el) {
@@ -152,9 +150,6 @@ export default {
       default: true
     }
   },
-  components: {
-    Card
-  },
   data () {
     return {
       fields: {
@@ -190,9 +185,10 @@ export default {
     generateMonthValue (n) {
       return n < 10 ? `0${n}` : n
     },
-    changeName (e) {
-      this.formData.cardName = e.target.value
-      this.$emit('input-card-name', this.formData.cardName)
+    changeName (value) {
+      // this.formData.cardName = e.target.value
+      console.log('cardform', value)
+      // this.$emit('input-card-name', this.formData.cardName)
     },
     changeNumber (e) {
       this.formData.cardNumber = e.target.value

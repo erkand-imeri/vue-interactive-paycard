@@ -3,11 +3,10 @@
         <label for="cardName" class="card-input__label">Card Name</label>
         <input
           type="text"
-          :id="fields.cardName"
-          v-letter-only
+          :id="cardType"
           @input="changeName"
           class="card-input__input"
-          :value="formData.cardName"
+          :value="cardName"
           data-card-field
           autocomplete="off"
         />
@@ -15,9 +14,21 @@
 </template>
 <script>
 export default {
-  name: 'CardName'  
+  name: 'CardNameInput',
+  props: {
+    cardType: {
+      type: String,
+      required: true
+    },
+    cardName: {
+      type: String,
+      required: true
+    }
+  },
+  methods: {
+    changeName (e) {
+      this.$emit('input', e.target.value)
+    }
+  }
 }
 </script>
-<style lang="css" scoped>
-
-</style>

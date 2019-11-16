@@ -2,6 +2,7 @@
     <div class="card-input">
         <label for="cardNumber" class="card-input__label">Card Number</label>
         <input
+          v-number-only
           type="tel"
           :id="cardType"
           @input="changeNumber"
@@ -34,6 +35,23 @@ export default {
     value: {
       type: String,
       required: true
+    },
+    isCardNumberMasked: {
+      type: Boolean
+    }
+  },
+  directives: {
+    'number-only': {
+      bind (el) {
+        function checkValue (event) {
+          event.target.value = event.target.value.replace(/[^0-9]/g, '')
+          if (event.charCode >= 48 && event.charCode <= 57) {
+            return true
+          }
+          event.preventDefault()
+        }
+        el.addEventListener('keypress', checkValue)
+      }
     }
   },
   mounted () {
@@ -41,14 +59,13 @@ export default {
   },
   data () {
     return {
-      isCardNumberMasked: true,
       cardNumberMaxLength: 19,
       mainCardNumber: this.value
     }
   },
   methods: {
     changeNumber (e) {
-      this.$emit('input', this.cardNumberRegex(e.target.value))
+      this.cardNumberRegex(e.target.value)
     },
     blurCardNumber () {
       if (this.isCardNumberMasked) {
@@ -56,7 +73,7 @@ export default {
       }
     },
     toggleMask () {
-      this.isCardNumberMasked = !this.isCardNumberMasked
+      this.$emit('toggle-mask-number', !this.isCardNumberMasked)
       if (this.isCardNumberMasked) {
         this.maskCardNumber()
       } else {
@@ -84,21 +101,16 @@ export default {
       let value = numValue.replace(/\D/g, '')
 
       if ((/^3[47]\d{0,13}$/).test(value)) {
-        numValue = value.replace(/(\d{4})/, '$1 ').replace(/(\d{4}) (\d{6})/, '$1 $2 ')
+        this.$emit('input', value.replace(/(\d{4})/, '$1 ').replace(/(\d{4}) (\d{6})/, '$1 $2 '))
         this.cardNumberMaxLength = 17
       } else if ((/^3(?:0[0-5]|[68]\d)\d{0,11}$/).test(value)) { // diner's club, 14 digits
-        numValue = value.replace(/(\d{4})/, '$1 ').replace(/(\d{4}) (\d{6})/, '$1 $2 ')
+        this.$emit('input', value.replace(/(\d{4})/, '$1 ').replace(/(\d{4}) (\d{6})/, '$1 $2 '))
         this.cardNumberMaxLength = 16
       } else if ((/^\d{0,16}$/).test(value)) { // regular cc number, 16 digits
-        numValue = value.replace(/(\d{4})/, '$1 ').replace(/(\d{4}) (\d{4})/, '$1 $2 ').replace(/(\d{4}) (\d{4}) (\d{4})/, '$1 $2 $3 ')
+        this.$emit('input', value.replace(/(\d{4})/, '$1 ').replace(/(\d{4}) (\d{4})/, '$1 $2 ').replace(/(\d{4}) (\d{4}) (\d{4})/, '$1 $2 $3 '))
         this.cardNumberMaxLength = 19
       }
-
-      return numValue
     }
   }
 }
 </script>
-<style lang="css" scoped>
-
-</style>

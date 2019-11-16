@@ -4,22 +4,24 @@
       <card-display
         :fields="fields"
         :labels="formData"
-        :isCardNumberMasked="isCardNumberMasked"
+        :is-card-number-masked="isCardNumberMasked"
         :randomBackgrounds="randomBackgrounds"
         :backgroundImage="backgroundImage"
       ></card-display>
     </div>
     <div class="card-form__inner">
       <card-number-input
-        v-number-only
         :card-type="fields.cardNumber"
+        :is-card-number-masked="isCardNumberMasked"
         v-model="formData.cardNumber"
+        @toggle-mask-number="toggleMaskNumber"
       >
       </card-number-input>
-      <card-name-input v-letter-only
+      <card-name-input
         :card-type="fields.cardName"
         v-model="formData.cardName"
-      ></card-name-input>
+      >
+      </card-name-input>
       <div class="card-form__row">
         <div class="card-form__col">
           <div class="card-form__group">
@@ -90,31 +92,6 @@ export default {
     'card-name-input': CardNameInput,
     'card-number-input': CardNumberInput
   },
-  directives: {
-    'number-only': {
-      bind (el) {
-        function checkValue (event) {
-          event.target.value = event.target.value.replace(/[^0-9]/g, '')
-          if (event.charCode >= 48 && event.charCode <= 57) {
-            return true
-          }
-          event.preventDefault()
-        }
-        el.addEventListener('keypress', checkValue)
-      }
-    },
-    'letter-only': {
-      bind (el) {
-        function checkValue (event) {
-          if (event.charCode >= 48 && event.charCode <= 57) {
-            event.preventDefault()
-          }
-          return true
-        }
-        el.addEventListener('keypress', checkValue)
-      }
-    }
-  },
   props: {
     formData: {
       type: Object,
@@ -132,6 +109,20 @@ export default {
     randomBackgrounds: {
       type: Boolean,
       default: true
+    }
+  },
+  directives: {
+    'number-only': {
+      bind (el) {
+        function checkValue (event) {
+          event.target.value = event.target.value.replace(/[^0-9]/g, '')
+          if (event.charCode >= 48 && event.charCode <= 57) {
+            return true
+          }
+          event.preventDefault()
+        }
+        el.addEventListener('keypress', checkValue)
+      }
     }
   },
   data () {
@@ -163,6 +154,9 @@ export default {
     }
   },
   methods: {
+    toggleMaskNumber (value) {
+      this.isCardNumberMasked = value
+    },
     generateMonthValue (n) {
       return n < 10 ? `0${n}` : n
     },

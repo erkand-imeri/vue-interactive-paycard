@@ -93,18 +93,6 @@ export default {
     'card-number-input': CardNumberInput
   },
   props: {
-    formData: {
-      type: Object,
-      default: () => {
-        return {
-          cardName: '',
-          cardNumber: '',
-          cardMonth: '',
-          cardYear: '',
-          cardCvv: ''
-        }
-      }
-    },
     backgroundImage: [String, Object],
     randomBackgrounds: {
       type: Boolean,
@@ -134,10 +122,15 @@ export default {
         cardYear: 'v-card-year',
         cardCvv: 'v-card-cvv'
       },
+      formData: {
+        cardName: '',
+        cardNumber: '',
+        cardMonth: '',
+        cardYear: '',
+        cardCvv: ''
+      },
       minCardYear: new Date().getFullYear(),
-      isCardNumberMasked: true,
-      mainCardNumber: this.cardNumber,
-      cardNumberMaxLength: 19
+      isCardNumberMasked: true
     }
   },
   computed: {
@@ -194,3 +187,6 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+@import '../assets/style.scss';
+</style>

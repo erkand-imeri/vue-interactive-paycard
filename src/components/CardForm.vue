@@ -33,19 +33,7 @@
           @click="toggleMask"
         ></button>
       </div>
-      <div class="card-input">
-        <label for="cardName" class="card-input__label">Card Name</label>
-        <input
-          type="text"
-          :id="fields.cardName"
-          v-letter-only
-          @input="changeName"
-          class="card-input__input"
-          :value="formData.cardName"
-          data-card-field
-          autocomplete="off"
-        />
-      </div>
+      <card-name-input v-model="formData.cardName" :card-field="fields.cardName"></card-name-input>
       <div class="card-form__row">
         <div class="card-form__col">
           <div class="card-form__group">
@@ -106,6 +94,8 @@
 
 <script>
 import Card from '@/components/Card'
+import CardNameInput from './input_forms/CardNameInput'
+
 export default {
   name: 'CardForm',
   directives: {
@@ -120,17 +110,6 @@ export default {
         }
         el.addEventListener('keypress', checkValue)
       }
-    },
-    'letter-only': {
-      bind (el) {
-        function checkValue (event) {
-          if (event.charCode >= 48 && event.charCode <= 57) {
-            event.preventDefault()
-          }
-          return true
-        }
-        el.addEventListener('keypress', checkValue)
-      }
     }
   },
   props: {
@@ -141,7 +120,8 @@ export default {
     }
   },
   components: {
-    Card
+    Card,
+    'card-name-input': CardNameInput
   },
   data () {
     return {
@@ -184,10 +164,6 @@ export default {
   methods: {
     generateMonthValue (n) {
       return n < 10 ? `0${n}` : n
-    },
-    changeName (e) {
-      this.formData.cardName = e.target.value
-      this.$emit('input-card-name', this.formData.cardName)
     },
     changeNumber (e) {
       this.formData.cardNumber = e.target.value

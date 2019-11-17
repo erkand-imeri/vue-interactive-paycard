@@ -134,18 +134,6 @@ export default {
     }
   },
   props: {
-    formData: {
-      type: Object,
-      default: () => {
-        return {
-          cardName: '',
-          cardNumber: '',
-          cardMonth: '',
-          cardYear: '',
-          cardCvv: ''
-        }
-      }
-    },
     backgroundImage: [String, Object],
     randomBackgrounds: {
       type: Boolean,
@@ -163,6 +151,13 @@ export default {
         cardMonth: 'v-card-month',
         cardYear: 'v-card-year',
         cardCvv: 'v-card-cvv'
+      },
+      formData: {
+        cardName: '',
+        cardNumber: '',
+        cardMonth: '',
+        cardYear: '',
+        cardCvv: ''
       },
       minCardYear: new Date().getFullYear(),
       isCardNumberMasked: true,
